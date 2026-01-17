@@ -163,18 +163,20 @@
 
     .qr-toggle{
       appearance: none;
-      border: 0;
+      border: 5px;
       cursor: pointer;
       padding: 10px 12px;
       border-radius: 12px;
       font-weight: 700;
-      background: rgba(255,255,255,.12);
-      color: var(--ink-light);
+      background: rgba(183, 185, 168, 0.12);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 26px rgba(0,0,0,.28);
+      box-shadow: 0 10px 26px rgba(216, 216, 204, 0.28);
       line-height: 1;
+      color: var(--accent2);
+
     }
+
 
     .qr-toggle:focus-visible{
       outline: 2px solid rgba(255,255,255,.65);
@@ -197,7 +199,7 @@
       height: 130px;
       display: block;
       border-radius: 8px;
-      background: #fff;
+      background: #e10505;
     }
 
     /* ---------- Download link centered under palette ---------- */
@@ -245,6 +247,21 @@
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; }
     }
+    .fs-btn{
+  display: inline-block;
+  margin: 0 auto 14px;
+  padding: 10px 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+
+  background: var(--accent2);
+  color: #fff;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+
   </style>
 </head>
 
@@ -256,12 +273,15 @@
     <button id="qrToggle" class="qr-toggle" type="button">Share via QR</button>
     <div id="qrContainer" class="qr-container" hidden>
       <canvas id="qrCanvas" width="130" height="130"></canvas>
+
     </div>
   </div>
 
   <main>
     <div class="tile-content">
       <iframe src="Columbia.pdf" title="Columbia PDF"></iframe>
+      <button id="fsBtn" class="fs-btn">Full screen</button>
+
 
       <!-- centered under the palette -->
       <a class="download-center" href="Columbia.pdf" target="_blank" rel="noopener">Download the PDF</a>
@@ -295,26 +315,38 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script>
-    const qrBtn = document.getElementById('qrToggle');
-    const qrBox = document.getElementById('qrContainer');
-    const qrCanvas = document.getElementById('qrCanvas');
+  const iframe = document.querySelector('.tile-content iframe');
+  const fsBtn = document.getElementById('fsBtn');
 
-    let qrGenerated = false;
-
-    qrBtn.addEventListener('click', () => {
-      if (!qrGenerated) {
-        new QRious({
-          element: qrCanvas,
-          value: window.location.href, // share THIS page
-          size: 130
-        });
-        qrGenerated = true;
+  fsBtn.addEventListener('click', async () => {
+    if (!document.fullscreenElement) {
+      // ENTER fullscreen
+      if (iframe.requestFullscreen) {
+        await iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen(); // iOS Safari
       }
+      fsBtn.textContent = 'Exit full screen';
+    } else {
+      // EXIT fullscreen
+      if (document.exitFullscreen) {
+        await document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen(); // iOS Safari
+      }
+      fsBtn.textContent = 'Full screen';
+    }
+  });
 
-      qrBox.hidden = !qrBox.hidden;
-      qrBtn.textContent = qrBox.hidden ? 'Share via QR' : 'Hide QR';
-    });
-  </script>
+  // Safety net: if user exits via ESC / gesture
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      fsBtn.textContent = 'Full screen';
+    }
+  });
+</script>
+    
 </body>
 </html>
+
 
