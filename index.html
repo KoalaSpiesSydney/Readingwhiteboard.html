@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>Koala Spies Sydney – Tile 1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+
 
   <style>
     :root {
@@ -46,6 +49,7 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 40px 30px;
+      width: 100%;
     }
 
     .tile-header {
@@ -72,27 +76,13 @@
       display: block;
     }
 
-    .tile-content p {
-      font-size: 1.3rem;
-      line-height: 1.9;
-      color: var(--ink-muted);
-      max-width: 900px;
-    }
-
     a {
       color: var(--accent5);
       font-weight: bold;
       text-decoration: none;
     }
 
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-top: 25px;
-    }
+    a:hover { text-decoration: underline; }
 
     footer {
       background: var(--light-bg);
@@ -116,24 +106,20 @@
         padding: 20px;
       }
 
-      .tile-header h2 {
-        font-size: 1.8rem;
-      }
+      .tile-header h2 { font-size: 1.8rem; }
 
       .tile-content iframe {
         height: 55vh;
         min-height: 350px;
       }
 
-      .tile-content p {
-        font-size: 1.1rem;
-      }
-
-      main {
-        padding: 25px 15px;
-      }
+      main { padding: 25px 15px; }
+      
     }
-    .questions {
+
+.questions {
+  font-family: 'Patrick Hand', cursive !important;
+  text-transform: none !important;
   max-width: 900px;
   margin: 40px auto;
   padding: 20px 30px;
@@ -142,76 +128,72 @@
   color: #f5f5f5;
 }
 
-.questions ol {
-  margin-left: 25px;
-  padding-left: 10px;
-}
-
-.questions li {
-  margin-bottom: 25px;
-}
-
-.questions ol ol {
-  margin-top: 15px;
-  margin-bottom: 20px;
-}
-
-.questions ol ol li {
-  margin-bottom: 10px;
-  font-size: 1.15rem;
-}
-.qr-box {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: #ffffff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  z-index: 9999;
-}
-
-.qr-box canvas {
-  width: 120px;
-  height: 120px;
-}
 
 
+    .questions ol {
+      margin-left: 25px;
+      padding-left: 10px;
+    }
+
+    .questions li { margin-bottom: 25px; }
+
+    .questions ol ol {
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+
+    .questions ol ol li {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    /* ---------- QR: top-left, click to show/hide ---------- */
+    
+    /* ---------- Download link centered under palette ---------- */
+    .download-center {
+      display: block;
+      text-align: center;
+      margin: 14px auto 0;
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 
 <body>
   <header>Koala Spies Sydney</header>
 
-  <div class="qr-box">
-  <canvas id="qrCanvas"></canvas>
-</div>
+  <!-- QR generator (top-left) -->
+  <div class="qr-float" aria-label="Share via QR">
+    <button id="qrToggle" class="qr-toggle" type="button">Share via QR</button>
+    <div id="qrContainer" class="qr-container" hidden>
+      <canvas id="qrCanvas"></canvas>
+    </div>
+  </div>
 
-
+  <main>
     <div class="tile-content">
-      <iframe src="Columbia.pdf"></iframe>
+      <iframe src="Columbia.pdf" title="Columbia PDF"></iframe>
 
-      <a href="Columbia.pdf" target="_blank">Download the PDF</a>
+      <!-- centered under the palette -->
+      <a class="download-center" href="Columbia.pdf" target="_blank" rel="noopener">Download the PDF</a>
 
-      <p>
-<div class="questions">
-  <ol>
-    <li>
-      Read the first paragraph and find:
-      <ol type="a">
-        <li>a word that means very complex</li>
-        <li>a word that describes when someone closes their eyes a little bit to see better</li>
-        <li>a word that means messy and disorganized</li>
-      </ol>
-    </li>
+      <div class="questions">
+        <ol>
+          <li>
+            Read the first paragraph and find:
+            <ol type="a">
+              <li>a word that means very complex</li>
+              <li>a word that describes when someone closes their eyes a little bit to see better</li>
+              <li>a word that means messy and disorganized</li>
+            </ol>
+          </li>
 
-    <li>Why is he holding the ring close to the light?</li>
+          <li>Why is he holding the ring close to the light?</li>
 
-    <li>What does a home-cum-workshop mean?</li>
-  </ol>
-</div>
-
-
+          <li>What does a home-cum-workshop mean?</li>
+        </ol>
+      </div>
+    </div>
   </main>
 
   <footer>
@@ -221,16 +203,29 @@
       <a href="KSScontact.index.html">Contact</a>
     </nav>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script>
+    const qrBtn = document.getElementById('qrToggle');
+    const qrBox = document.getElementById('qrContainer');
+    const qrCanvas = document.getElementById('qrCanvas');
+
+    let qrGenerated = false;
+
+    qrBtn.addEventListener('click', () => {
+      if (!qrGenerated) {
+        new QRious({
+          element: qrCanvas,
+          value: window.location.href, // share THIS page
+          size: 130
+        });
+        qrGenerated = true;
+      }
+
+      qrBox.hidden = !qrBox.hidden;
+      qrBtn.textContent = qrBox.hidden ? 'Share via QR' : 'Hide QR';
+    });
+  </script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-
-<script>
-  const qr = new QRious({
-    element: document.getElementById('qrCanvas'),
-    value: 'https://example.com', // ← put your link here
-    size: 120
-  });
-</script>
-
 </html>
 
