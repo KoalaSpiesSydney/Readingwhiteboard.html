@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Koala Spies Sydney – Tile 1</title>
 
-  <!-- iPhone/iPad safe viewport (prevents weird zoom + respects notch) -->
+  <!-- iPhone/iPad safe viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -61,34 +61,7 @@
       width: 100%;
     }
 
-    .tile-header {
-      background: var(--accent5);
-      padding: 50px 30px;
-      border-radius: 12px;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .tile-header h2 {
-      margin: 0;
-      font-size: 2.4rem;
-      color: #fff;
-    }
-
-    /* Make iframe behave on iOS Safari + Android Chrome:
-       - Use responsive height with a solid minimum
-       - Avoid huge vh jumps where mobile browser UI shrinks/expands */
-    .tile-content iframe {
-      width: 100%;
-      height: clamp(420px, 70vh, 900px); /* computer first, still safe on small screens */
-      min-height: 500px;
-      border: none;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      display: block;
-      background: #fff; /* helps when PDF viewer paints late */
-      -webkit-overflow-scrolling: touch;
-    }
+    .tile-content { width: 100%; }
 
     a {
       color: var(--accent5);
@@ -136,18 +109,9 @@
       margin-left: 25px;
       padding-left: 10px;
     }
-
     .questions li { margin-bottom: 25px; }
-
-    .questions ol ol {
-      margin-top: 15px;
-      margin-bottom: 20px;
-    }
-
-    .questions ol ol li {
-      margin-bottom: 10px;
-      font-size: 1.15rem;
-    }
+    .questions ol ol { margin-top: 15px; margin-bottom: 20px; }
+    .questions ol ol li { margin-bottom: 10px; font-size: 1.15rem; }
 
     /* ---------- QR: top-left, click to show/hide (kept) ---------- */
     .qr-float{
@@ -174,9 +138,7 @@
       box-shadow: 0 10px 26px rgba(216, 216, 204, 0.28);
       line-height: 1;
       color: var(--accent2);
-
     }
-
 
     .qr-toggle:focus-visible{
       outline: 2px solid rgba(255,255,255,.65);
@@ -193,7 +155,6 @@
       box-shadow: 0 10px 26px rgba(0,0,0,.28);
     }
 
-    /* prevent canvas blur on some mobiles by matching CSS size to pixel size */
     #qrCanvas{
       width: 130px;
       height: 130px;
@@ -210,58 +171,139 @@
       font-size: 1.1rem;
     }
 
-    /* MOBILE / TABLET OPTIMISATION (still computer-first above) */
+    /* ---------- Buttons ---------- */
+    .fs-btn{
+      display: inline-block;
+      margin: 0 auto 14px;
+      padding: 10px 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: var(--accent2);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+    }
+
+    /* =========================
+       PDF.js viewer (replaces iframe)
+       ========================= */
+    .pdf-shell{
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(0,0,0,.28);
+      margin-bottom: 18px;
+    }
+
+    .pdf-toolbar{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: rgba(0,0,0,.05);
+      border-bottom: 1px solid rgba(0,0,0,.10);
+    }
+
+    .pdf-toolbar .left,
+    .pdf-toolbar .right{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pdf-meta{
+      font-weight: 700;
+      color: #222;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .pdf-btn{
+      appearance: none;
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 800;
+      background: var(--accent5);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(0,0,0,.18);
+    }
+    .pdf-btn:disabled{
+      opacity: .55;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .pdf-stage{
+      /* Stable mobile height without fighting browser chrome too much */
+      height: clamp(420px, 70vh, 900px);
+      min-height: 360px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px 0;
+      background: #f2f2f2;
+    }
+
+    .pdf-page{
+      display: flex;
+      justify-content: center;
+      padding: 10px 14px;
+    }
+
+    .pdf-page canvas{
+      width: 100%;
+      height: auto;
+      max-width: 980px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    }
+
+    .pdf-status{
+      padding: 12px 14px;
+      font-weight: 700;
+      color: #222;
+      text-align: center;
+      background: rgba(0,0,0,.05);
+      border-top: 1px solid rgba(0,0,0,.10);
+    }
+
+    /* MOBILE / TABLET OPTIMISATION */
     @media (max-width: 900px) {
       main { padding: 28px 18px; }
       header { font-size: 2.1rem; padding: 22px 16px; }
       .questions { padding: 18px 18px; margin: 30px auto; }
+      .pdf-page canvas{ max-width: 100%; }
     }
 
     @media (max-width: 768px) {
       header { font-size: 1.9rem; padding: 18px 14px; letter-spacing: 1px; }
-      .tile-header h2 { font-size: 1.7rem; }
-      .tile-content iframe {
-        height: 60vh;
-        min-height: 360px;
-        border-radius: 12px;
-      }
       .questions { font-size: 1.18rem; line-height: 1.75; }
       footer nav { gap: 16px; }
+      .pdf-stage{ height: 60vh; }
     }
 
     @media (max-width: 420px) {
-      .tile-content iframe {
-        height: 58vh;
-        min-height: 320px;
-      }
       .qr-toggle { padding: 9px 10px; border-radius: 11px; }
       #qrCanvas { width: 122px; height: 122px; }
+      .pdf-stage{ height: 58vh; }
+      .pdf-meta{ font-size: 0.9rem; }
     }
 
     /* Touch-friendly behavior */
     @media (hover: none) and (pointer: coarse) {
       .qr-toggle { padding: 12px 14px; }
+      .pdf-btn{ padding: 10px 14px; }
     }
 
-    /* Respect reduced motion (no animation here, but keeps it future-safe) */
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; }
     }
-    .fs-btn{
-  display: inline-block;
-  margin: 0 auto 14px;
-  padding: 10px 16px;
-  font-weight: 700;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-
-  background: var(--accent2);
-  color: #fff;
-
-  box-shadow: 0 6px 18px rgba(0,0,0,.25);
-}
-
   </style>
 </head>
 
@@ -273,15 +315,31 @@
     <button id="qrToggle" class="qr-toggle" type="button">Share via QR</button>
     <div id="qrContainer" class="qr-container" hidden>
       <canvas id="qrCanvas" width="130" height="130"></canvas>
-
     </div>
   </div>
 
   <main>
     <div class="tile-content">
-      <iframe src="Columbia.pdf" title="Columbia PDF"></iframe>
-      <button id="fsBtn" class="fs-btn">Full screen</button>
 
+      <!-- PDF.js viewer -->
+      <section id="pdfShell" class="pdf-shell" aria-label="PDF Viewer">
+        <div class="pdf-toolbar">
+          <div class="left">
+            <span id="pdfMeta" class="pdf-meta">Loading PDF…</span>
+          </div>
+          <div class="right">
+            <button id="pdfZoomOut" class="pdf-btn" type="button" aria-label="Zoom out">A-</button>
+            <button id="pdfZoomIn" class="pdf-btn" type="button" aria-label="Zoom in">A+</button>
+            <button id="fsBtn" class="pdf-btn" type="button">Full screen</button>
+          </div>
+        </div>
+
+        <div id="pdfStage" class="pdf-stage" role="region" aria-label="PDF pages" tabindex="0">
+          <!-- canvases injected here -->
+        </div>
+
+        <div id="pdfStatus" class="pdf-status" aria-live="polite">Preparing pages…</div>
+      </section>
 
       <!-- centered under the palette -->
       <a class="download-center" href="Columbia.pdf" target="_blank" rel="noopener">Download the PDF</a>
@@ -313,40 +371,190 @@
     </nav>
   </footer>
 
+  <!-- QR library (kept) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
   <script>
-  const iframe = document.querySelector('.tile-content iframe');
-  const fsBtn = document.getElementById('fsBtn');
+    /* =========================
+       PDF.js setup
+       ========================= */
+    const PDF_URL = "Columbia.pdf";
 
-  fsBtn.addEventListener('click', async () => {
-    if (!document.fullscreenElement) {
-      // ENTER fullscreen
-      if (iframe.requestFullscreen) {
-        await iframe.requestFullscreen();
-      } else if (iframe.webkitRequestFullscreen) {
-        iframe.webkitRequestFullscreen(); // iOS Safari
-      }
-      fsBtn.textContent = 'Exit full screen';
-    } else {
-      // EXIT fullscreen
-      if (document.exitFullscreen) {
-        await document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen(); // iOS Safari
-      }
-      fsBtn.textContent = 'Full screen';
-    }
-  });
+    const shell = document.getElementById("pdfShell");
+    const stage = document.getElementById("pdfStage");
+    const meta = document.getElementById("pdfMeta");
+    const statusEl = document.getElementById("pdfStatus");
 
-  // Safety net: if user exits via ESC / gesture
-  document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-      fsBtn.textContent = 'Full screen';
+    const zoomOutBtn = document.getElementById("pdfZoomOut");
+    const zoomInBtn = document.getElementById("pdfZoomIn");
+    const fsBtn = document.getElementById("fsBtn");
+
+    // pdf.js worker (CDN)
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
     }
-  });
-</script>
-    
+
+    let pdfDoc = null;
+    let userScale = 1.0;          // user zoom multiplier
+    const SCALE_STEP = 0.12;
+    const SCALE_MIN = 0.7;
+    const SCALE_MAX = 2.2;
+
+    let renderToken = 0;
+
+    function setStatus(msg) {
+      statusEl.textContent = msg;
+    }
+
+    function clearStage() {
+      while (stage.firstChild) stage.removeChild(stage.firstChild);
+    }
+
+    function getFitWidthScale(page) {
+      // Fit page width to stage's inner width (minus padding)
+      const stageStyles = getComputedStyle(stage);
+      const padLeft = parseFloat(stageStyles.paddingLeft) || 0;
+      const padRight = parseFloat(stageStyles.paddingRight) || 0;
+      const available = stage.clientWidth - padLeft - padRight;
+
+      const viewportAt1 = page.getViewport({ scale: 1 });
+      const fit = available / viewportAt1.width;
+
+      // Keep desktop from becoming comically large; canvas max-width handles it,
+      // but this helps initial render feel consistent.
+      return fit;
+    }
+
+    async function renderAllPages() {
+      if (!pdfDoc) return;
+
+      const myToken = ++renderToken;
+      clearStage();
+
+      meta.textContent = `Columbia PDF · ${pdfDoc.numPages} page${pdfDoc.numPages === 1 ? "" : "s"}`;
+      setStatus("Rendering pages…");
+
+      // Render sequentially to keep memory stable on mobile
+      for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+        if (myToken !== renderToken) return;
+
+        const page = await pdfDoc.getPage(pageNum);
+
+        const fitScale = getFitWidthScale(page);
+        const scale = fitScale * userScale;
+
+        const viewport = page.getViewport({ scale });
+
+        // Create wrapper + canvas
+        const pageWrap = document.createElement("div");
+        pageWrap.className = "pdf-page";
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d", { alpha: false });
+
+        // HiDPI crispness
+        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = Math.floor(viewport.width) + "px";
+        canvas.style.height = Math.floor(viewport.height) + "px";
+
+        // Scale context for DPR
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        pageWrap.appendChild(canvas);
+        stage.appendChild(pageWrap);
+
+        await page.render({
+          canvasContext: ctx,
+          viewport: viewport,
+          intent: "display"
+        }).promise;
+
+        setStatus(`Rendered page ${pageNum} of ${pdfDoc.numPages}`);
+      }
+
+      setStatus("Ready");
+    }
+
+    function clampScale(v) {
+      return Math.max(SCALE_MIN, Math.min(SCALE_MAX, v));
+    }
+
+    zoomOutBtn.addEventListener("click", async () => {
+      userScale = clampScale(userScale - SCALE_STEP);
+      await renderAllPages();
+    });
+
+    zoomInBtn.addEventListener("click", async () => {
+      userScale = clampScale(userScale + SCALE_STEP);
+      await renderAllPages();
+    });
+
+    // Re-render on resize/orientation to keep fit-width correct
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        renderAllPages();
+      }, 140);
+    });
+
+    // Fullscreen: works on many desktops/Android; iOS is limited
+    fsBtn.addEventListener("click", async () => {
+      const target = shell; // fullscreen the viewer shell
+      if (!document.fullscreenElement) {
+        if (target.requestFullscreen) {
+          await target.requestFullscreen();
+        } else if (target.webkitRequestFullscreen) {
+          target.webkitRequestFullscreen();
+        }
+        fsBtn.textContent = "Exit full screen";
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        fsBtn.textContent = "Full screen";
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) fsBtn.textContent = "Full screen";
+    });
+
+    // Load PDF
+    (async function initPdf() {
+      try {
+        meta.textContent = "Loading PDF…";
+        setStatus("Downloading…");
+
+        const loadingTask = pdfjsLib.getDocument({
+          url: PDF_URL,
+          // If you ever serve from another domain, you may need CORS headers there
+          withCredentials: false
+        });
+
+        pdfDoc = await loadingTask.promise;
+
+        meta.textContent = `Columbia PDF · ${pdfDoc.numPages} page${pdfDoc.numPages === 1 ? "" : "s"}`;
+        await renderAllPages();
+      } catch (err) {
+        console.error(err);
+        meta.textContent = "PDF failed to load";
+        setStatus("If this keeps happening, use the Download link below.");
+      }
+    })();
+  </script>
+
+  <!-- Your QR toggle logic is not shown in your snippet; keep whatever you already had.
+       If you need it added here too, paste it and I’ll merge it cleanly. -->
 </body>
 </html>
+
 
 
